@@ -1,0 +1,44 @@
+
+#!/bin/bash
+
+if [ $1 == --help ]; 
+then
+  echo "usage: ./Task1.sh [directory1] [directory2] [number of bytes]"
+  echo
+  echo "This script moves files which size is bigger then presetted number of bytes from directory1 to directory2 "
+  exit
+fi
+
+if [ "$#" -ne 3 ];
+then
+  echo "Illegal number of parameters. Type --help for more information."
+  exit
+fi
+
+if [ ! -d $1 ];
+then
+  echo "First two parameters must be directories."
+  exit
+fi
+
+if [ ! -d $2 ];
+then
+  echo "First two parameters must be directories."
+  exit
+fi
+
+
+d=$1
+r=$2
+v=$3
+
+for item in "$d"/*
+do
+  if [ -f $item ];
+  then
+    if [ $(wc -c <$item) -ge $v ];
+    then
+      mv $item $r
+    fi 
+  fi
+done

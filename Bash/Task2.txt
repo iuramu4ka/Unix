@@ -1,0 +1,41 @@
+
+#!/bin/bash
+
+if [ $1 == --help ]; 
+then
+  echo "usage: ./Task2.sh [directory1] [directory2] [number of biggest files]"
+  echo
+  echo "This script moves n biggest files from directory1 to directory2"
+  exit
+fi
+
+if [ "$#" -ne 3 ];
+then
+  echo "Illegal number of parameters. Type --help for more information."
+  exit
+fi
+
+if [ ! -d $1 ];
+then
+  echo "First two parameters must be directories."
+  exit
+fi
+
+if [ ! -d $2 ];
+then
+  echo "First two parameters must be directories."
+  exit
+fi
+
+
+d=$1
+r=$2
+n=$3
+
+cd $r
+r_path=$(pwd)
+cd
+
+find $d -type f -exec ls --sort=size {} \;|tail -n +1| head -n $n|xargs cp -t $r_path
+
+

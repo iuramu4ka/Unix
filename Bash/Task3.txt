@@ -1,0 +1,47 @@
+  GNU nano 2.9.3                                                                                                Task3.sh                                                                                                Modified  
+
+#!/bin/bash
+
+if [ $1 == --help ]; 
+then
+  echo "usage: ./Task3.sh [directory1] [directory2]"
+  echo
+  echo "This script archive all c-files in directory1 and it's subdirectories, then update this archive with two files and than unarchivates it to directory2"
+  exit
+fi
+
+if [ "$#" -ne 2 ];
+then
+  echo "Illegal number of parameters. Type --help for more information."
+  exit
+fi
+
+if [ ! -d $1 ];
+then
+  echo "Both parameters must be directories."
+  exit
+fi
+
+if [ ! -d $2 ];
+then
+  echo "Both parameters must be directories."
+  exit
+fi
+
+
+d=$1
+r=$2
+
+cd $d
+d_path=$(pwd)
+cd 
+cd $r
+r_path=$(pwd)
+cd
+
+zip -jr test.zip $d_path -i '*.c'
+
+zip -u test.zip foo.c
+zip -u test.zip bar.c
+
+unzip test.zip -d $r_path

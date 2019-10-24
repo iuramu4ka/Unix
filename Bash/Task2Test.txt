@@ -1,0 +1,64 @@
+#! /bin/bash
+
+
+
+testFilesCopy() {
+  local tmp_dir=$(mktemp -d -t ci-XXXXXXXXXX) 
+
+  mkdir ${tmp_dir}/folderR
+  mkdir ${tmp_dir}/folderD
+
+  touch ${tmp_dir}/folderD/file1
+  touch ${tmp_dir}/folderD/file2
+  touch ${tmp_dir}/folderD/file3
+  touch ${tmp_dir}/folderD/file4
+  touch ${tmp_dir}/folderD/file5
+
+  echo "Lorem ipsum dolor sit amet" >${tmp_dir}/folderD/file1.txt
+  echo "Lorem ipsum dolor sit amet, consectetur adipiscing elit" >${tmp_dir}/folderD/file2.txt
+  echo "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" >${tmp_dir}/folderD/file3.txt
+  echo "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore" >${tmp_dir}/folderD/file4.txt
+  echo "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. " >${tmp_dir}/folderD/file5.txt
+
+
+  ./Task2.sh ${tmp_dir}/folderD ${tmp_dir}/folderR 2
+
+  errors=0
+
+  if [ -f ${tmp_dir}/folderR/file5.txt ];
+  then
+    ((errors++))
+  fi
+
+  if [ -f ${tmp_dir}/folderR/file4.txt ];
+  then
+    ((errors++))
+  fi
+
+  assertEquals "${errors}" "0"
+
+  rm -r ${tmp_dir}
+}
+
+testBadArguments()
+{
+  expectedOutput="First two parameters must be directories."
+  actualOutput="$(./Task2.sh randomParameter anotherRandomParameter yetAnotherRandomParameter)"
+
+  assertEquals "${expectedOutput}" "${actualOutput}"
+}
+
+testWrongAmountOfArguments()
+{
+  expectedOutput="Illegal number of parameters. Type --help for more information."
+  actualOutput="$(./Task2.sh randomParameter)"
+
+  assertEquals "${expectedOutput}" "${actualOutput}"
+
+  actualOutput="$(./Task2.sh randomParameter anotherRandomParameter yetAnotherRandomParameter yetYetRandomParameter)"
+
+  assertEquals "${expectedOutput}" "${actualOutput}"
+}
+
+. shunit2
+
